@@ -25,7 +25,6 @@ public class PiecController {
         Piece piece = pieceMapper.pieceDTOToPiece(pieceDTO);
         pieceService.addPiece(piece);
     }
-
     // ✅ Récupérer toutes les pièces
     @GetMapping
     public List<PieceDTO> getAllPieces() {

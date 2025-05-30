@@ -43,14 +43,15 @@ public class Piece {
         PURPLE,
         PINK,
         GRAY,   // ← changé de GREY à GRAY pour correspondre à "gray" du frontend
-        BROWN
+        BROWN,
+        MAROON
     }
 
 
     @ElementCollection
     @Enumerated(EnumType.STRING)
     @CollectionTable(name = "piece_colors", joinColumns = @JoinColumn(name = "piece_id"))
-    @Column(name = "color")
+    @Column(name = "color", length = 50)  // Increased column length to accommodate all color names
     private List<Color> colors;
 
     public enum Season {

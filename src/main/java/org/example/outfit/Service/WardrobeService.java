@@ -72,32 +72,25 @@ Wardrobe wardrobe = wardrobeRepo.findByUserId(user.getId())
                 .filter(p -> p.getStatus() == Piece.Status.AVAILABLE)
                 .filter(p -> p.getSeasons().contains(season))
                 .toList();
-
         // Create new outfit with initialized collections
         Outfit outfit = new Outfit();
-
         // Initialize collections
         outfit.setOccasions(new ArrayList<>());
         outfit.setSeasons(new ArrayList<>());
-
         // Add the specific occasion and season
         outfit.getOccasions().add(occasion);
         outfit.getSeasons().add(season);
-
         // Set other properties
         outfit.setStyle(style);
         outfit.setName(style + " outfit for " + season + " - " + occasion);
         outfit.setDescription("Generated " + style + " outfit for " + occasion + " in " + season);
         outfit.setLiked(false);
         outfit.setSaved(false);
-
         // Set the user's wardrobe
         outfit.setWardrobe(wardrobe);
-
         if (pieces.isEmpty()) {
             return outfit; // Return outfit with basic properties if no pieces match
         }
-
         // 1. TOP
         Piece top = findBestPiece(pieces, Piece.Category.TOP, null, false, style, occasion, season);
         if (top == null) return outfit;
@@ -111,17 +104,16 @@ Wardrobe wardrobe = wardrobeRepo.findByUserId(user.getId())
         // 3. SHOES (optionnel)
         Piece shoes = findBestPiece(pieces, Piece.Category.SHOES, top, hasPattern, style, occasion, season);
         if (shoes != null) outfitService.attachOutfitPiece(outfit, shoes);
-
         // Log before saving to verify collections are properly populated
         System.out.println("Before saving - User: " + username);
         System.out.println("Before saving - Wardrobe ID: " + wardrobe.getId());
         System.out.println("Before saving - Style: " + outfit.getStyle());
         System.out.println("Before saving - Seasons: " + outfit.getSeasons());
         System.out.println("Before saving - Occasions: " + outfit.getOccasions());
-
         // Save and return
         return outfitService.save(outfit);
     }
+
     private Piece findBestPiece(List<Piece> pieces, Piece.Category category, Piece referencePiece, boolean referenceHasPattern,
                                 Piece.Style style, Piece.Occasion occasion, Piece.Season season) {
 

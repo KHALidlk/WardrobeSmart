@@ -47,12 +47,18 @@ public class UserController {
                 // Return token with a proper JSON structure
                 Map<String, Object> tokenMap = new HashMap<>();
                 tokenMap.put("token", token);
-                tokenMap.put("username", userDTO.getLogin());
+                tokenMap.put("login", userDTO.getLogin());
 
                 // Add user ID and role if available
                 if (existingUser != null) {
                     tokenMap.put("id", existingUser.getId());
                     tokenMap.put("role", existingUser.getRole());
+                    tokenMap.put("fname", existingUser.getFname());
+                    tokenMap.put("lname", existingUser.getLname());
+                    tokenMap.put("login", existingUser.getLogin());
+                    tokenMap.put("email", existingUser.getEmail());
+                    tokenMap.put("age", existingUser.getAge());
+                    tokenMap.put("gender", existingUser.getGender());
 
                     // Add wardrobe ID if available
                     if (existingUser.getWardrobe() != null) {
@@ -122,3 +128,4 @@ public class UserController {
         userService.deleteUserById(id);
     }
 }
+
