@@ -49,7 +49,9 @@ public class PieceService {
         pieceRepository.save(piece);
     }
 
-    public void delete(Piece piece) {
+    public void delete(Long id) {
+        Piece piece = pieceRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Piece not found with id: " + id));
         pieceRepository.delete(piece);
     }
 
@@ -61,10 +63,56 @@ public class PieceService {
         return pieceRepository.findAll();
     }
 
-    public void update(Piece piece) {
-        pieceRepository.save(piece); // JPA's adduser method can be used for updates as well
+    public Piece update(Piece piece) {
+        if (piece.getId() == null) {
+            throw new IllegalArgumentException("Cannot update piece without an ID");
+        }
+
+        // Check if the piece exists
+        pieceRepository.findById(piece.getId())
+            .orElseThrow(() -> new RuntimeException("Piece not found with id: " + piece.getId()));
+
+        // Save and return the updated piece
+        return pieceRepository.save(piece);
     }
+
+    public Piece findById(Long id) {
+        return pieceRepository.findById(id)
+            .orElseThrow(() -> new RuntimeException("Piece not found with id: " + id));
+    }
+
     public List<Piece> getPiecesByWardrobeId(Long wardrobeId) {
         return pieceRepository.findByWardrobeId(wardrobeId);
     }
+
+    /**
+     * Toggle the liked status of a piece
+     * @param id The ID of the piece to toggle liked status
+     * @return The updated piece with the new liked status
+     */
+    public Piece toggleLiked(Long id) {
+        Piece piece = findById(id);
+        piece.setLiked(!piece.isLiked()); // Toggle the current value
+        return pieceRepository.save(piece);
     }
+
+    /**
+     * Set the liked status of a piece to a specific value
+     * @param id The ID of the piece to update
+     * @param liked The new liked status to set
+     * @return The updated piece with the new liked status
+     */
+    public Piece setLiked(Long id, boolean liked) {
+        Piece piece = findById(id);
+        piece.setLiked(liked);
+        return pieceRepository.save(piece);
+    }
+
+    /**
+     * Get all pieces that are liked
+     * @return List of liked pieces
+     */
+    public List<Piece> getLikedPieces() {
+        return pieceRepository.findByLiked(true);
+    }
+}

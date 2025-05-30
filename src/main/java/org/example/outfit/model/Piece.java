@@ -156,6 +156,7 @@ public enum Style {
     private int rating;
 
     private boolean available = true;
+    private boolean liked = false; // Add a liked field to track if the piece is liked
     @ManyToOne
     @JoinColumn(name = "wardrobe_id")
     @JsonBackReference

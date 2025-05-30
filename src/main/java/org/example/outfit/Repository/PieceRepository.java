@@ -13,6 +13,6 @@ public interface PieceRepository extends JpaRepository<Piece, Long> {
     List<Piece> findByDescription(String description);
     List<Piece> findByRating(int rating);
     List<Piece> findByWardrobeId(Long wardrobeId);
-
+    List<Piece> findByLiked(boolean liked);                        // Added method to find liked pieces
 }
 

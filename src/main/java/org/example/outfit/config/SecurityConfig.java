@@ -44,7 +44,9 @@ public class SecurityConfig {
                         .requestMatchers("/wardrobe/**").hasAnyAuthority("ROLE_USER", "ROLE_ADMIN")
 
                         // Admin-only endpoints
+                        .requestMatchers("/users/update/{id}").hasAnyAuthority("ROLE_USER","ROLE_ADMIN") // Fixed path for update endpoint
                         .requestMatchers("/users", "/users/**").hasAuthority("ROLE_ADMIN")
+
 
                         // Any other request requires authentication
                         .anyRequest().authenticated()
@@ -97,3 +99,4 @@ public class SecurityConfig {
         return authConfig.getAuthenticationManager();
     }
 }
+

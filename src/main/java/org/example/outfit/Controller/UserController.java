@@ -122,6 +122,23 @@ public class UserController {
         }
     }
 
+    // Endpoint to update a user
+    @PutMapping("/update/{id}")
+    public ResponseEntity<?> updateUser(@PathVariable Long id, @RequestBody UserDTO userDTO) {
+        try {
+            UserDTO updatedUser = userService.updateUser(id, userDTO);
+            return ResponseEntity.ok(updatedUser);
+        } catch (IllegalArgumentException e) {
+            Map<String, String> error = new HashMap<>();
+            error.put("error", e.getMessage());
+            return ResponseEntity.status(404).body(error);
+        } catch (Exception e) {
+            Map<String, String> error = new HashMap<>();
+            error.put("error", "Error updating user: " + e.getMessage());
+            return ResponseEntity.status(500).body(error);
+        }
+    }
+
     // Endpoint to delete a user by their ID
     @DeleteMapping("/delete/{id}")
     public void deleteUserById(@PathVariable Long id) {

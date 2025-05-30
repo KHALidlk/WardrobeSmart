@@ -29,8 +29,10 @@ public class PieceDTO {
     private boolean pattern;
     private int rating;
     private boolean available;
+    private boolean liked;
     private String imageUrl;
 
     // Only include the ID of the wardrobe to avoid circular references
     private Long wardrobeId;
 }
+

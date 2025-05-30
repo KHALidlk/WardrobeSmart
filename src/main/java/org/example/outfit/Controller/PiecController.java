@@ -5,6 +5,7 @@ import org.example.outfit.mapper.PieceMapper;
 import org.example.outfit.model.Piece;
 import org.example.outfit.Service.PieceService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -42,7 +43,10 @@ public class PiecController {
     }
 
     // Other methods similarly updated...
-
+    @DeleteMapping("/delete/{id}")
+    public void deletePiece(@PathVariable Long id) {
+        pieceService.deleteById(id);
+    }
     // For example, update the style endpoint
     @GetMapping("/style/{style}")
     public List<PieceDTO> getByStyle(@PathVariable Piece.Style style) {
@@ -56,6 +60,71 @@ public class PiecController {
     public List<PieceDTO> getByWardrobe(@PathVariable Long wardrobeId) {
         // You'll need to add this method to your PieceService
         return pieceService.getPiecesByWardrobeId(wardrobeId).stream()
+                .map(pieceMapper::pieceToPieceDTO)
+                .collect(Collectors.toList());
+    }
+
+    // Add a new endpoint to update a piece
+    @PutMapping("/update/{id}")
+    public ResponseEntity<PieceDTO> updatePiece(@PathVariable Long id, @RequestBody PieceDTO pieceDTO) {
+        // Set the ID from the path variable to ensure we're updating the correct piece
+        pieceDTO.setId(id);
+
+        try {
+            // Convert DTO to entity
+            Piece piece = pieceMapper.pieceDTOToPiece(pieceDTO);
+
+            // Update the piece
+            Piece updatedPiece = pieceService.update(piece);
+
+            // Convert back to DTO and return
+            return ResponseEntity.ok(pieceMapper.pieceToPieceDTO(updatedPiece));
+        } catch (RuntimeException e) {
+            return ResponseEntity.notFound().build();
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().build();
+        }
+    }
+
+    // Add an endpoint to get a piece by ID
+    @GetMapping("/{id}")
+    public ResponseEntity<PieceDTO> getPieceById(@PathVariable Long id) {
+        try {
+            Piece piece = pieceService.findById(id);
+            return ResponseEntity.ok(pieceMapper.pieceToPieceDTO(piece));
+        } catch (RuntimeException e) {
+            return ResponseEntity.notFound().build();
+        }
+    }
+
+    // Add an endpoint to toggle the liked status of a piece
+    @PutMapping("/{id}/toggle-like")
+    public ResponseEntity<PieceDTO> toggleLiked(@PathVariable Long id) {
+        try {
+            Piece updatedPiece = pieceService.toggleLiked(id);
+            return ResponseEntity.ok(pieceMapper.pieceToPieceDTO(updatedPiece));
+        } catch (RuntimeException e) {
+            return ResponseEntity.notFound().build();
+        }
+    }
+
+    // Add an endpoint to set the liked status of a piece to a specific value
+    @PutMapping("/{id}/like")
+    public ResponseEntity<PieceDTO> setLiked(
+            @PathVariable Long id,
+            @RequestParam boolean liked) {
+        try {
+            Piece updatedPiece = pieceService.setLiked(id, liked);
+            return ResponseEntity.ok(pieceMapper.pieceToPieceDTO(updatedPiece));
+        } catch (RuntimeException e) {
+            return ResponseEntity.notFound().build();
+        }
+    }
+
+    // Add an endpoint to get all liked pieces
+    @GetMapping("/liked")
+    public List<PieceDTO> getLikedPieces() {
+        return pieceService.getLikedPieces().stream()
                 .map(pieceMapper::pieceToPieceDTO)
                 .collect(Collectors.toList());
     }

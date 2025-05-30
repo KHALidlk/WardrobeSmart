@@ -98,4 +98,33 @@ private final JWTService jwtService;
     public User findByLogin(String login) {
         return userRepo.findByLogin(login).orElse(null);
     }
+
+    /**
+     * Updates only a user's login, password, and age
+     * If password is provided, it will be encrypted before saving
+     */
+    public UserDTO updateUser(Long id, UserDTO userDTO) {
+        // Check if user exists
+        User existingUser = userRepo.findById(id)
+            .orElseThrow(() -> new IllegalArgumentException("User not found with ID: " + id));
+
+        // Update only the login, password, and age fields
+        if (userDTO.getLogin() != null && !userDTO.getLogin().isEmpty()) {
+            existingUser.setLogin(userDTO.getLogin());
+        }
+
+        // Only update password if provided (not empty)
+        if (userDTO.getPassword() != null && !userDTO.getPassword().isEmpty()) {
+            existingUser.setPassword(passwordEncoder.encode(userDTO.getPassword()));
+        }
+
+        // Update age if it's a valid value (greater than 0)
+        if (userDTO.getAge() > 0) {
+            existingUser.setAge(userDTO.getAge());
+        }
+
+        // Save the updated user
+        User savedUser = userRepo.save(existingUser);
+        return userMapper.userToUserDTO(savedUser);
+    }
 }
