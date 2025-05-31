@@ -85,7 +85,7 @@ Wardrobe wardrobe = wardrobeRepo.findByUserId(user.getId())
         outfit.setName(style + " outfit for " + season + " - " + occasion);
         outfit.setDescription("Generated " + style + " outfit for " + occasion + " in " + season);
         outfit.setLiked(false);
-        outfit.setSaved(false);
+        outfit.setSaved(true);
         // Set the user's wardrobe
         outfit.setWardrobe(wardrobe);
         if (pieces.isEmpty()) {
@@ -132,27 +132,30 @@ Wardrobe wardrobe = wardrobeRepo.findByUserId(user.getId())
 
         // 1. Motifs : éviter double motif
         if (!referenceHasPattern || !piece.isPattern()) {
-            score += 20;
+            score += 1;
         }
 
         // 2. Style
         if (piece.getStyle().equals(style)) {
-            score += 15;
+            score += 1;
         }
 
-        // 3. Status - now handled in filters
+        // 3. Status - handled in filters
 
         // 4. Occasion
         if (piece.getOccasions().contains(occasion)) {
-            score += 10;
+            score += 1;
         }
 
-        // 5. Saison - we already filter by season, but give extra points for exact match vs ALL
+        // 5. Season
         if (piece.getSeasons().contains(season)) {
-            score += 10; // Higher score for exact season match
+            score += 1;
         }
-        // 6. Rating - prefer higher rated pieces
-        score += piece.getRating();
+
+        // 6. Rating
+        if (piece.getRating() >= 3) {
+            score += 1;
+        }
 
         return score;
     }

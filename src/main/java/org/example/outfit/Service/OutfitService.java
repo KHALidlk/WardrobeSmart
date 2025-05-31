@@ -5,6 +5,9 @@ import org.example.outfit.model.Outfit;
 import org.example.outfit.model.Piece;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.List;
 
@@ -79,6 +82,11 @@ public class OutfitService {
 
         outfitRepoImpl.save(outfit);
     }
+
+    public Outfit findById(Long id) {
+        return outfitRepoImpl.findById(id).orElse(null);
+    }
+
 
     public void attachOutfitPiece(Outfit outfit, Piece piece) {
         if (outfit == null || piece == null) return;

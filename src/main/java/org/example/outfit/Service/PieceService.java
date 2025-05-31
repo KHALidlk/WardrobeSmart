@@ -97,14 +97,24 @@ public class PieceService {
     }
 
     /**
-     * Set the liked status of a piece to a specific value
-     * @param id The ID of the piece to update
-     * @param liked The new liked status to set
-     * @return The updated piece with the new liked status
+     * Like a piece (set liked status to true)
+     * @param id The ID of the piece to like
+     * @return The updated piece with liked status set to true
      */
-    public Piece setLiked(Long id, boolean liked) {
+    public Piece likePiece(Long id) {
         Piece piece = findById(id);
-        piece.setLiked(liked);
+        piece.setLiked(true);
+        return pieceRepository.save(piece);
+    }
+
+    /**
+     * Dislike a piece (set liked status to false)
+     * @param id The ID of the piece to dislike
+     * @return The updated piece with liked status set to false
+     */
+    public Piece dislikePiece(Long id) {
+        Piece piece = findById(id);
+        piece.setLiked(false);
         return pieceRepository.save(piece);
     }
 

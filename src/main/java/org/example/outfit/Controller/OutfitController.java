@@ -17,9 +17,15 @@ public class OutfitController {
         return outfitService.findBySaved(saved);
     }
 
-    @GetMapping("/liked")
-    public List<Outfit> getLikedOutfits(@RequestParam boolean liked) {
+    @GetMapping("/liked/")
+    public List<Outfit> getLikedOutfits(@RequestParam("liked") boolean liked) {
         return outfitService.findByLiked(liked);
+    }
+    @PutMapping("/{id}/liked")
+    public Outfit updateOutfitLikedStatus(@PathVariable("id") Long id, @RequestParam("liked") boolean liked) {
+        Outfit outfit = outfitService.findById(id);
+        outfit.setLiked(liked);
+        return outfitService.save(outfit);
     }
 
     @GetMapping("/style")

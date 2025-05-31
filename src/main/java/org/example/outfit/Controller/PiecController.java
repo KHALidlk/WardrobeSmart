@@ -108,13 +108,22 @@ public class PiecController {
         }
     }
 
-    // Add an endpoint to set the liked status of a piece to a specific value
-    @PutMapping("/{id}/like")
-    public ResponseEntity<PieceDTO> setLiked(
-            @PathVariable Long id,
-            @RequestParam boolean liked) {
+    // Add an endpoint to like a piece (set liked status to true)
+    @PutMapping("/like/{id}")
+    public ResponseEntity<PieceDTO> likePiece(@PathVariable Long id) {
         try {
-            Piece updatedPiece = pieceService.setLiked(id, liked);
+            Piece updatedPiece = pieceService.likePiece(id);
+            return ResponseEntity.ok(pieceMapper.pieceToPieceDTO(updatedPiece));
+        } catch (RuntimeException e) {
+            return ResponseEntity.notFound().build();
+        }
+    }
+
+    // Add an endpoint to dislike a piece (set liked status to false)
+    @PutMapping("/dislike/{id}")
+    public ResponseEntity<PieceDTO> dislikePiece(@PathVariable Long id) {
+        try {
+            Piece updatedPiece = pieceService.dislikePiece(id);
             return ResponseEntity.ok(pieceMapper.pieceToPieceDTO(updatedPiece));
         } catch (RuntimeException e) {
             return ResponseEntity.notFound().build();

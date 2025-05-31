@@ -31,6 +31,7 @@ public class PieceMapperImpl implements PieceMapper {
         pieceDTO.setRating(piece.getRating());
         pieceDTO.setImageUrl(piece.getImageUrl());
         pieceDTO.setAvailable(piece.isAvailable());
+        pieceDTO.setLiked(piece.isLiked()); // Explicitly set the liked field from the entity
 
         // Only map the wardrobe ID to avoid circular references
         if (piece.getWardrobe() != null) {
@@ -74,3 +75,4 @@ public class PieceMapperImpl implements PieceMapper {
         return piece;
     }
 }
+
